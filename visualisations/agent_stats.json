@@ -1,0 +1,541 @@
+{
+    "title": "AWS Connect - Agent Stats",
+    "icon": "line-chart",
+    "grid_column_count": 12,
+    "filter": null,
+    "widgets": [
+        {
+            "title": "Agent Logins",
+            "nrql": "FROM Log SELECT latest(EventTimestamp) AS 'Agent Name' WHERE EventType = 'LOGIN' FACET CurrentAgentSnapshot.Configuration.Username SINCE 1 day AGO",
+            "process_as": "facet_bar_chart",
+            "width": 3,
+            "height": 3,
+            "row": 1,
+            "column": 1,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {
+                    "dashboard_id": 1641239
+                }
+            },
+            "notes": null
+        },
+        {
+            "title": "Available Agents",
+            "nrql": "FROM Log SELECT uniqueCount(CurrentAgentSnapshot.Configuration.Username) AS 'Available Agents' WHERE EventType IN ('HEART_BEAT','STATE_CHANGE') AND CurrentAgentSnapshot.AgentStatus.Name = 'Available' SINCE 5 MINUTES AGO",
+            "process_as": "billboard",
+            "width": 3,
+            "height": 3,
+            "row": 1,
+            "column": 4,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "thresholds": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Number of Outbound Calls",
+            "nrql": "FROM Log SELECT count(*) AS 'Outbound Calls' SINCE 1 month AGO WHERE CurrentAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"OUTBOUND\"%' AND CurrentAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTED\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"OUTBOUND\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTING\"%' COMPARE WITH 1 day ago",
+            "process_as": "billboard_comparison",
+            "width": 3,
+            "height": 3,
+            "row": 1,
+            "column": 7,
+            "event_types": null,
+            "facet": null,
+            "customizations": null,
+            "notes": null
+        },
+        {
+            "title": "Number of Inbound Calls",
+            "nrql": "FROM Log SELECT count(*) AS 'Inbound Calls' SINCE 1 month AGO WHERE CurrentAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"INBOUND\"%' AND CurrentAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTED\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"INBOUND\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTING\"%' COMPARE WITH 1 day ago",
+            "process_as": "billboard_comparison",
+            "width": 3,
+            "height": 3,
+            "row": 1,
+            "column": 10,
+            "event_types": null,
+            "facet": null,
+            "customizations": null,
+            "notes": null
+        },
+        {
+            "title": "Offline/Online Agents",
+            "nrql": null,
+            "width": 6,
+            "height": 3,
+            "row": 4,
+            "column": 1,
+            "notes": null,
+            "event_types": null,
+            "facet": null,
+            "agent_ids": [],
+            "duration": null,
+            "metrics": null,
+            "raw_metric_name": null,
+            "end_time": null,
+            "cds_params_payload": null,
+            "renderer": null,
+            "renderer_props": null,
+            "extension_type": "MULTIQUERY",
+            "customizations": {
+                "drilldown": {}
+            }
+        },
+        {
+            "title": "Agents on Voice Channel",
+            "nrql": "FROM Log SELECT uniqueCount(CurrentAgentSnapshot.Configuration.Username) AS 'Agents (Voice)' WHERE CurrentAgentSnapshot.AgentStatus.Name= 'Available' AND CurrentAgentSnapshot.Configuration.RoutingProfile.DefaultOutboundQueue.Channels LIKE '%VOICE%' AND EventType = 'HEART_BEAT' FACET CurrentAgentSnapshot.Configuration.Username SINCE 2 MINUTES AGO",
+            "process_as": "facet_bar_chart",
+            "width": 3,
+            "height": 3,
+            "row": 4,
+            "column": 7,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {
+                    "dashboard_id": 1641239
+                }
+            },
+            "notes": null
+        },
+        {
+            "title": "Agents Since last 7 Days",
+            "nrql": "FROM Log SELECT uniques(CurrentAgentSnapshot.Configuration.Username) AS 'Agent Name' WHERE EventType = 'LOGIN' SINCE 7 days AGO",
+            "process_as": "uniques_list",
+            "width": 3,
+            "height": 3,
+            "row": 4,
+            "column": 10,
+            "event_types": null,
+            "facet": null,
+            "customizations": null,
+            "notes": null
+        },
+        {
+            "title": "Inbound Calls by Agent",
+            "nrql": "FROM Log SELECT count(*) AS 'Inbound Calls' SINCE 1 month AGO WHERE CurrentAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"INBOUND\"%' AND CurrentAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTED\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"INBOUND\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTING\"%' FACET CurrentAgentSnapshot.Configuration.Username ",
+            "process_as": "facet_pie_chart",
+            "width": 4,
+            "height": 3,
+            "row": 7,
+            "column": 1,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {
+                    "dashboard_id": 1641239
+                }
+            },
+            "notes": null
+        },
+        {
+            "title": "Outbound Calls by Agents",
+            "nrql": "FROM Log SELECT count(*) AS 'Outbound Calls' SINCE 1 month AGO WHERE CurrentAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"OUTBOUND\"%' AND CurrentAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTED\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"OUTBOUND\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTING\"%' FACET CurrentAgentSnapshot.Configuration.Username ",
+            "process_as": "facet_pie_chart",
+            "width": 4,
+            "height": 3,
+            "row": 7,
+            "column": 5,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Total Outbound Calls",
+            "nrql": "FROM Log SELECT count(*) AS 'Outbound Calls' SINCE 1 month AGO WHERE CurrentAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"OUTBOUND\"%' AND CurrentAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTED\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"OUTBOUND\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTING\"%'",
+            "process_as": "billboard",
+            "width": 2,
+            "height": 3,
+            "row": 7,
+            "column": 9,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "thresholds": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Total Inbound Calls",
+            "nrql": "FROM Log SELECT count(*) AS 'Inbound Calls' SINCE 1 month AGO WHERE CurrentAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"INBOUND\"%' AND CurrentAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTED\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"INBOUND\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTING\"%'",
+            "process_as": "billboard",
+            "width": 2,
+            "height": 3,
+            "row": 7,
+            "column": 11,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "thresholds": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Longest After call work duration by Agent",
+            "nrql": "FROM Log SELECT max(Agent.AfterContactWorkDuration) AS 'After call work' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' FACET Agent.Username ",
+            "process_as": "facet_pie_chart",
+            "width": 6,
+            "height": 3,
+            "row": 10,
+            "column": 1,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {
+                    "dashboard_id": 1641239
+                }
+            },
+            "notes": null
+        },
+        {
+            "title": "Total After call work time by agent",
+            "nrql": "FROM Log SELECT sum(Agent.AfterContactWorkDuration) AS 'After call work' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' FACET Agent.Username ",
+            "process_as": "facet_bar_chart",
+            "width": 6,
+            "height": 3,
+            "row": 10,
+            "column": 7,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {
+                    "dashboard_id": 1641239
+                }
+            },
+            "notes": null
+        },
+        {
+            "title": "Longest Interaction Duration by agent",
+            "nrql": "FROM Log SELECT max(Agent.AgentInteractionDuration) AS 'Total Interaction Duration' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' FACET Agent.Username ",
+            "process_as": "facet_pie_chart",
+            "width": 6,
+            "height": 3,
+            "row": 13,
+            "column": 1,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Total Interaction Duration by agent",
+            "nrql": "FROM Log SELECT sum(Agent.AgentInteractionDuration) AS 'Total Interaction Duration' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' FACET Agent.Username ",
+            "process_as": "facet_bar_chart",
+            "width": 6,
+            "height": 3,
+            "row": 13,
+            "column": 7,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Longest Hold Duration by Agent",
+            "nrql": "FROM Log SELECT max(Agent.LongestHoldDuration) AS 'Longest Hold Duration (sec)' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' FACET Agent.Username ",
+            "process_as": "facet_pie_chart",
+            "width": 4,
+            "height": 3,
+            "row": 16,
+            "column": 1,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {
+                    "dashboard_id": 1641239
+                }
+            },
+            "notes": null
+        },
+        {
+            "title": "Total Hold Duration by Agent",
+            "nrql": "FROM Log SELECT sum(Agent.LongestHoldDuration) AS 'Longest Hold Duration' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' FACET Agent.Username",
+            "process_as": "facet_bar_chart",
+            "width": 4,
+            "height": 3,
+            "row": 16,
+            "column": 5,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {
+                    "dashboard_id": 1641239
+                }
+            },
+            "notes": null
+        },
+        {
+            "title": "Longest Hold Duration in sec",
+            "nrql": "FROM Log SELECT max(Agent.LongestHoldDuration) AS 'Longest Hold Duration (sec)' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE'",
+            "process_as": "billboard",
+            "width": 4,
+            "height": 3,
+            "row": 16,
+            "column": 9,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "thresholds": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Max Number of Holds while on a call",
+            "nrql": "FROM Log SELECT max(Agent.NumberOfHolds) AS 'Max Number of Holds' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE'",
+            "process_as": "billboard",
+            "width": 3,
+            "height": 3,
+            "row": 19,
+            "column": 1,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "thresholds": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Total Number of Holds by Agent",
+            "nrql": "FROM Log SELECT sum(Agent.NumberOfHolds) AS 'Max Number of Holds' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' FACET Agent.Username ",
+            "process_as": "facet_pie_chart",
+            "width": 4,
+            "height": 3,
+            "row": 19,
+            "column": 4,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {
+                    "dashboard_id": 1641239
+                }
+            },
+            "notes": null
+        },
+        {
+            "title": "Count of Holds over time",
+            "nrql": "FROM Log SELECT count(Agent.NumberOfHolds) AS 'Count of Holds' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' AND Agent.NumberOfHolds > 0 TIMESERIES",
+            "process_as": "line_chart",
+            "width": 5,
+            "height": 3,
+            "row": 19,
+            "column": 8,
+            "event_types": null,
+            "facet": null,
+            "customizations": null,
+            "notes": null
+        },
+        {
+            "title": "Longest Customer Hold Duration",
+            "nrql": "FROM Log SELECT max(Agent.CustomerHoldDuration) AS 'Hold Duration (sec)' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE'",
+            "process_as": "billboard",
+            "width": 2,
+            "height": 3,
+            "row": 22,
+            "column": 1,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "thresholds": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Total calls disconnected by Agent",
+            "nrql": "FROM Log SELECT count(*) AS 'Disconnected Calls (Agent)' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' AND DisconnectReason = 'AGENT_DISCONNECT'",
+            "process_as": "billboard",
+            "width": 3,
+            "height": 3,
+            "row": 22,
+            "column": 3,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "thresholds": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Total Calls Disconnected by Customer",
+            "nrql": "FROM Log SELECT count(*) AS 'Disconnected Calls (Customer)' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' AND DisconnectReason = 'CUSTOMER_DISCONNECT'",
+            "process_as": "billboard",
+            "width": 3,
+            "height": 3,
+            "row": 22,
+            "column": 6,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "thresholds": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Total calls disconnected per Agent",
+            "nrql": "FROM Log SELECT count(*) AS 'Call disconnected by Agent' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' AND DisconnectReason = 'AGENT_DISCONNECT' FACET Agent.Username",
+            "process_as": "facet_pie_chart",
+            "width": 4,
+            "height": 3,
+            "row": 22,
+            "column": 9,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {
+                    "dashboard_id": 1641239
+                }
+            },
+            "notes": null
+        },
+        {
+            "title": "Queued calls Traffic by Weekday",
+            "nrql": "FROM Log SELECT count(*) SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' AND Queue.Duration > 5 FACET weekdayOf(timestamp)",
+            "process_as": "facet_bar_chart",
+            "width": 4,
+            "height": 6,
+            "row": 25,
+            "column": 1,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Outbound Calls Traffic by Weekday",
+            "nrql": "FROM Log SELECT count(*) AS 'Outbound Calls' SINCE 1 month AGO WHERE CurrentAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"OUTBOUND\"%' AND CurrentAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTED\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"OUTBOUND\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTING\"%' FACET weekdayOf(timestamp)",
+            "process_as": "facet_bar_chart",
+            "width": 4,
+            "height": 6,
+            "row": 25,
+            "column": 5,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Inbound Calls Traffic by Weekday",
+            "nrql": "FROM Log SELECT count(*) AS 'Inbound Calls' SINCE 1 month AGO WHERE CurrentAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"INBOUND\"%' AND CurrentAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTED\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"InitiationMethod\":\"INBOUND\"%' AND PreviousAgentSnapshot.Contacts LIKE '%\"State\":\"CONNECTING\"%' FACET weekdayOf(timestamp)",
+            "process_as": "facet_bar_chart",
+            "width": 4,
+            "height": 6,
+            "row": 25,
+            "column": 9,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Longest Call Queue Duration",
+            "nrql": "FROM Log SELECT max(Queue.Duration) AS 'Longest Queue Duration (Sec)' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' AND Channel = 'VOICE'",
+            "process_as": "billboard",
+            "width": 4,
+            "height": 3,
+            "row": 31,
+            "column": 1,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "thresholds": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Number of calls Queue Duration > 15sec",
+            "nrql": "FROM Log SELECT count(*) AS 'Queue Duration > 10 (Sec)' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' AND Channel = 'VOICE' AND Queue.Duration > 15",
+            "process_as": "billboard",
+            "width": 4,
+            "height": 3,
+            "row": 31,
+            "column": 5,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "thresholds": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Longest Call Queue Duration By Queue",
+            "nrql": "FROM Log SELECT max(Queue.Duration) AS 'Longest Queue Duration (Sec)' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' AND Channel = 'VOICE' FACET Queue.Name",
+            "process_as": "facet_bar_chart",
+            "width": 4,
+            "height": 3,
+            "row": 31,
+            "column": 9,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {
+                    "dashboard_id": 1641239
+                }
+            },
+            "notes": null
+        },
+        {
+            "title": "Longest Call Duration",
+            "nrql": "FROM Log SELECT max(Duration) AS 'Longest Call Duration (Sec)' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' AND Channel = 'VOICE'",
+            "process_as": "billboard",
+            "width": 4,
+            "height": 3,
+            "row": 34,
+            "column": 1,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "thresholds": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Average Call Duration",
+            "nrql": "FROM Log SELECT average(Duration) AS 'Longest Call Duration (Sec)' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' AND Channel = 'VOICE'",
+            "process_as": "billboard",
+            "width": 4,
+            "height": 3,
+            "row": 34,
+            "column": 5,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "thresholds": {}
+            },
+            "notes": null
+        },
+        {
+            "title": "Average Call Duration",
+            "nrql": "FROM Log SELECT average(Duration) AS 'Avg. Call Duration (Sec)' SINCE 1 month AGO WHERE Recording.Status = 'AVAILABLE' AND Channel = 'VOICE' FACET Agent.Username",
+            "process_as": "facet_pie_chart",
+            "width": 4,
+            "height": 3,
+            "row": 34,
+            "column": 9,
+            "event_types": null,
+            "facet": null,
+            "customizations": {
+                "drilldown": {
+                    "dashboard_id": 1641239
+                }
+            },
+            "notes": null
+        }
+    ],
+    "dashboard_account_id": 2564753
+}
